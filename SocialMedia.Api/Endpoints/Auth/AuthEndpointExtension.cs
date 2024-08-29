@@ -11,10 +11,8 @@ public static class AuthEndpointExtension
     {
         app.MapPost("/auth", async ([FromBody] AuthenticationCommand request, IMediator mediator,  ITokenGenerator tokenGenerator) =>
         {
-
             var result = await mediator.Send(request);
             var token = result.Data != null ? (await tokenGenerator.GenerateAsync(result.Data)).Token : string.Empty;
-
             return new AuthResponse
             {
                 Token = token,
@@ -23,16 +21,13 @@ public static class AuthEndpointExtension
             };
 
         });
-
         return app;
-
     }
     
     public record AuthResponse
     {
         public string Token { get; init; }
         public AuthenticationInfoResponse User { get; init; }
-
         public AuthenticationCommandResponse.AuthenticationStatus Status { get; init; }
     }
 }

@@ -10,10 +10,10 @@ public interface ISettings
 public class Settings : ISettings
 {
     public string ConnectionString { get; set; } =
-        "Host=localhost;Database=ticket_system;Username=postgres;password=root";
+        "Host=localhost;Database=social_media;Username=postgres;password=root";
     
     public string WebAppUrl { get; set; } = "http://localhost:3000";
-    public string WebApiUrl { get; set; } = "https://localhost:5031";
+    public string WebApiUrl { get; set; } = "http://localhost:5031";
 
 
     public static Settings GetSettingsFromEnvironment()
@@ -25,7 +25,7 @@ public class Settings : ISettings
             ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING") ??
                                defaultSettings.ConnectionString,
             WebAppUrl = Environment.GetEnvironmentVariable("WEB_APP_URL") ?? defaultSettings.WebAppUrl,
-            WebApiUrl = Environment.GetEnvironmentVariable("WEB_API_URL") ?? defaultSettings.WebAppUrl,
+            WebApiUrl = Environment.GetEnvironmentVariable("WEB_API_URL") ?? defaultSettings.WebApiUrl,
         };
     }
 

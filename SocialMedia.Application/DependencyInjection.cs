@@ -26,8 +26,10 @@ public static class DependencyInjection
         });
         services.AddSingleton<ILanguageResource, EnglishLanguageResource>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
         services.AddScoped<IDateTimeFactory, DateTimeFactory>();
         services.AddScoped<IDateFormatter, DateFormatter>();
+        services.AddScoped<IFileStorageService, FileStorageService>();
         services.AddSingleton(settings);
 
         return services;

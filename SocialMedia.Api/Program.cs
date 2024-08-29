@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -8,6 +9,7 @@ using SocialMedia.Api.Common.MiddleWares;
 using SocialMedia.Api.Endpoints;
 using SocialMedia.Application;
 using SocialMedia.Application.Common;
+using SocialMedia.Application.Common.Data;
 using SocialMedia.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,10 +49,6 @@ builder.Services.AddApiVersioning(x =>
 }).AddApiExplorer();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.Configure<HostOptions>(x =>
-{
-    x.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
-});
 
 builder.Services.AddSwaggerGen((opts) =>
 {
@@ -82,19 +80,21 @@ builder.Services.AddSwaggerGen((opts) =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddDefaultPolicy(policyBuilder =>
     {
-        policy
-            .SetIsOriginAllowedToAllowWildcardSubdomains()
-            .WithOrigins("http://localhost:3000")
-            .AllowAnyHeader()
+        policyBuilder.AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowCredentials();
+            .AllowAnyHeader();
     });
 });
 
 builder.Services.AddAuthorization();
 builder.Services.AddBearerAuthentication(builder.Configuration);
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB
+});
 
 
 var app = builder.Build();
@@ -104,18 +104,23 @@ JsonConvert.DefaultSettings = () => new JsonSerializerSettings
     ContractResolver = new CamelCasePropertyNamesContractResolver(),
 };
 
+using var scope = app.Services.CreateScope();
+
+scope.ServiceProvider.GetRequiredService<IDataMigrator>().Migrate();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Social Media"); });
 }
 
+app.UseStaticFiles();
 app.UseCors();
 
 app.UseAppHealthCheck();
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseGenericErrorHandling();
 app.UsePreventClickJacking();
 app.MapApiEndpoints();
 

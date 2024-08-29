@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SocialMedia.Application.Common;
 
 namespace SocialMedia.Api.Common.Extensions;
 

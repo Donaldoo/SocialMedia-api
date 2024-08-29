@@ -21,7 +21,9 @@ internal sealed class GetAuthenticationInfoQueryEfHandler : IRequestHandler<GetA
                 new AuthenticationInfoResponse
                 {
                     UserId = x.Id,
-                    Name = x.Fullname
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    ProfilePicture = x.ProfilePicture
                 })
             .FirstOrDefaultAsync(cancellationToken);
     }

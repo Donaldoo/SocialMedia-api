@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SocialMedia.Domain.Posts;
 
 namespace SocialMedia.Infrastructure.Persistence;
 
@@ -8,6 +9,11 @@ public class AppDbContext : DbContext
     private readonly ILoggerFactory _loggerFactory;
     
     public DbSet<Domain.Account.User> Users { get; set; }
+    public DbSet<Post> Posts { get; set; }
+    public DbSet<Comment> Comments { get; set; }
+    public DbSet<Like> Likes { get; set; }
+    public DbSet<Relationship> Relationships { get; set; }
+    public DbSet<Story> Stories { get; set; }
     
     public AppDbContext(DbContextOptions options, ILoggerFactory loggerFactory) : base(options)
     {
