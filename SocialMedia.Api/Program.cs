@@ -11,6 +11,7 @@ using SocialMedia.Application;
 using SocialMedia.Application.Common;
 using SocialMedia.Application.Common.Data;
 using SocialMedia.Infrastructure;
+using SocialMedia.Infrastructure.Persistence.ChatHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,14 +83,17 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policyBuilder =>
     {
-        policyBuilder.AllowAnyOrigin()
+        policyBuilder.WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
-            .AllowAnyHeader();
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 
 builder.Services.AddAuthorization();
 builder.Services.AddBearerAuthentication(builder.Configuration);
+
+builder.Services.AddSignalR();
 
 builder.Services.Configure<FormOptions>(options =>
 {
@@ -122,6 +126,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseGenericErrorHandling();
 app.UsePreventClickJacking();
+app.MapHub<ChatHub>("/chathub");
 app.MapApiEndpoints();
 
 app.Run();

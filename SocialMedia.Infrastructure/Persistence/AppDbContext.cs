@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SocialMedia.Domain.ChatHub;
 using SocialMedia.Domain.Posts;
 
 namespace SocialMedia.Infrastructure.Persistence;
@@ -14,6 +15,9 @@ public class AppDbContext : DbContext
     public DbSet<Like> Likes { get; set; }
     public DbSet<Relationship> Relationships { get; set; }
     public DbSet<Story> Stories { get; set; }
+    public DbSet<Chat> Chats { get; set; }
+    public DbSet<Message> Messages { get; set; }
+    public DbSet<ChatUser> ChatUsers { get; set; }
     
     public AppDbContext(DbContextOptions options, ILoggerFactory loggerFactory) : base(options)
     {
