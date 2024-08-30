@@ -21,10 +21,12 @@ internal sealed class GetStoriesQueryHandler : IRequestHandler<GetStoriesQuery, 
 
     public async Task<IList<StoryDto>> Handle(GetStoriesQuery request, CancellationToken cancellationToken)
     {
-        return await _db.Stories.Where(s => s.CreatedAt >= _dateTimeFactory.UtcNowWithOffset().AddDays(-1) &&
-                _db.Relationships.Any(r =>
-                    r.FollowerUserId == _currentUser.UserId &&
-                    r.FollowedUserId == s.StoryUserId) || s.StoryUserId == _currentUser.UserId).Select(s => new StoryDto
+        return await _db.Stories
+            .Where(s => s.CreatedAt >= _dateTimeFactory.UtcNowWithOffset().AddDays(-1) &&
+                        (_db.Relationships.Any(r =>
+                            r.FollowerUserId == _currentUser.UserId &&
+                            r.FollowedUserId == s.StoryUserId) || s.StoryUserId == _currentUser.UserId))
+            .Select(s => new StoryDto
             {
                 Id = s.Id,
                 Image = s.Image,

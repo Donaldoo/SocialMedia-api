@@ -1,5 +1,6 @@
 using SocialMedia.Api.Endpoints.Account;
 using SocialMedia.Api.Endpoints.Auth;
+using SocialMedia.Api.Endpoints.ChatHub;
 using SocialMedia.Api.Endpoints.Posts;
 
 namespace SocialMedia.Api.Endpoints;
@@ -12,6 +13,7 @@ public static class EndpointExtensions
         app.MapAuth();
         app.MapAccountEndpoints();
         app.MapPostsEndpoints();
+        app.MapChatHubEndpoints();
         return app;
     }
 }
