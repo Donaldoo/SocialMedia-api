@@ -17,7 +17,8 @@ public class PostsConfigurations : BaseConfigurations, IEntityTypeConfiguration<
         builder.HasOne(o => o.User)
             .WithMany()
             .IsRequired()
-            .HasForeignKey(o => o.UserId);
+            .HasForeignKey(o => o.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -33,12 +34,15 @@ public class CommentsConfigurations : BaseConfigurations, IEntityTypeConfigurati
         builder.HasOne(o => o.User)
             .WithMany()
             .IsRequired()
-            .HasForeignKey(o => o.CommentUserId);
+            .HasForeignKey(o => o.CommentUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        ;
 
         builder.HasOne(o => o.Post)
             .WithMany()
             .IsRequired()
-            .HasForeignKey(o => o.PostId);
+            .HasForeignKey(o => o.PostId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -56,7 +60,8 @@ public class LikesConfigurations : BaseConfigurations, IEntityTypeConfiguration<
         builder.HasOne(o => o.Post)
             .WithMany()
             .IsRequired()
-            .HasForeignKey(o => o.LikedPostId);
+            .HasForeignKey(o => o.LikedPostId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -70,7 +75,8 @@ public class StoriesConfigurations : BaseConfigurations, IEntityTypeConfiguratio
         builder.HasOne(o => o.User)
             .WithMany()
             .IsRequired()
-            .HasForeignKey(o => o.StoryUserId);
+            .HasForeignKey(o => o.StoryUserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -83,11 +89,13 @@ public class RelationshipsConfigurations : BaseConfigurations, IEntityTypeConfig
         builder.HasOne(o => o.FollowedUser)
             .WithMany()
             .IsRequired()
-            .HasForeignKey(o => o.FollowedUserId);
+            .HasForeignKey(o => o.FollowedUserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(o => o.FollowerUser)
             .WithMany()
             .IsRequired()
-            .HasForeignKey(o => o.FollowerUserId);
+            .HasForeignKey(o => o.FollowerUserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

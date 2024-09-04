@@ -23,12 +23,14 @@ public class MessageConfigurations : BaseConfigurations, IEntityTypeConfiguratio
         builder.HasOne(o => o.Sender)
             .WithMany()
             .HasForeignKey(o => o.SenderId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasOne(o => o.Chat)
             .WithMany()
             .HasForeignKey(o => o.ChatId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -41,11 +43,13 @@ public class ChatUserConfigurations : BaseConfigurations, IEntityTypeConfigurati
         builder.HasOne(o => o.Chat)
             .WithMany()
             .IsRequired()
-            .HasForeignKey(o => o.ChatId);
+            .HasForeignKey(o => o.ChatId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(o => o.User)
             .WithMany()
             .HasForeignKey(o => o.UserId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

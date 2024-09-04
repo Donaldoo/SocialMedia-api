@@ -1,9 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using SocialMedia.Application.ChatHub;
+using SocialMedia.Application.ChatHub.ReadMessage;
 using SocialMedia.Application.ChatHub.SendMessage;
-using SocialMedia.Application.Common;
-using SocialMedia.Domain.ChatHub;
 
 namespace SocialMedia.Infrastructure.Persistence.ChatHub;
 
@@ -18,14 +17,7 @@ public class ChatHub : Hub
 
     public async Task SendMessage(Guid chatId, Guid userId, string messageContent)
     {
-        var message = new Message
-        {
-            ChatId = chatId,
-            Content = messageContent,
-            SenderId = userId
-        };
-
-        await _mediator.Send(new CreateMessageCommand
+        var message = await _mediator.Send(new CreateMessageCommand
         {
             ChatId = chatId,
             Content = messageContent,
@@ -38,13 +30,19 @@ public class ChatHub : Hub
             Content = messageContent,
             SentAt = message.SentAt.ToString("o")
         };
-
         await Clients.Group(chatId.ToString()).SendAsync("ReceiveMessage", messageDto);
+        
+        await _mediator.Send(new ReadMessagesCommand(chatId, userId));
+       
+        await Clients.Group(chatId.ToString()).SendAsync("MessageRead", userId, chatId);
+
     }
 
-    public async Task JoinChat(Guid chatId)
+    public async Task JoinChat(Guid chatId, Guid userId)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, chatId.ToString());
+        await _mediator.Send(new ReadMessagesCommand(chatId, userId));
+        await Clients.Group(chatId.ToString()).SendAsync("MessageRead", userId, chatId);
 
         await Clients.Caller.SendAsync("JoinedChat", chatId);
     }
@@ -58,10 +56,8 @@ public class ChatHub : Hub
 
     public async Task GetChatHistory(Guid chatId)
     {
-        var query = new GetChatHistoryQuery(chatId);
-
-        var messages = await _mediator.Send(query);
-
+        var messages = await _mediator.Send(new GetChatHistoryQuery(chatId));
+        
         await Clients.Caller.SendAsync("ReceiveChatHistory", messages);
     }
 }

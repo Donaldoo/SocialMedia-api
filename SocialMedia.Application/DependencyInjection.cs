@@ -6,6 +6,7 @@ using SocialMedia.Application.Common;
 using SocialMedia.Application.Common.Behaviours;
 using SocialMedia.Application.Common.Dates;
 using SocialMedia.Application.Internationalization;
+using SocialMedia.Application.NotificationHub;
 using TicketSystem.Domain.Common.Attributes;
 
 namespace SocialMedia.Application;
@@ -30,6 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IDateTimeFactory, DateTimeFactory>();
         services.AddScoped<IDateFormatter, DateFormatter>();
         services.AddScoped<IFileStorageService, FileStorageService>();
+        services.AddScoped<INotificationService, NotificationService>();
         services.AddSingleton(settings);
 
         return services;

@@ -1,5 +1,9 @@
+using System.Security.Claims;
+using System.Text;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -10,6 +14,7 @@ using SocialMedia.Api.Endpoints;
 using SocialMedia.Application;
 using SocialMedia.Application.Common;
 using SocialMedia.Application.Common.Data;
+using SocialMedia.Application.NotificationHub;
 using SocialMedia.Infrastructure;
 using SocialMedia.Infrastructure.Persistence.ChatHub;
 
@@ -90,8 +95,35 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("asddnasdnasjdioqwurewqoyreqw8798!23312qweqwew")),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            NameClaimType = ClaimTypes.NameIdentifier,
+            RoleClaimType = ClaimTypes.Role,
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    (path.StartsWithSegments("/notificationHub") || path.StartsWithSegments("/chathub")))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
+    });
 builder.Services.AddAuthorization();
-builder.Services.AddBearerAuthentication(builder.Configuration);
 
 builder.Services.AddSignalR();
 
@@ -127,6 +159,7 @@ app.UseAuthorization();
 app.UseGenericErrorHandling();
 app.UsePreventClickJacking();
 app.MapHub<ChatHub>("/chathub");
+app.MapHub<NotificationHub>("/notificationHub");
 app.MapApiEndpoints();
 
 app.Run();

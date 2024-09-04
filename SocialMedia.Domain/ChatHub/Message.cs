@@ -11,4 +11,5 @@ public record Message
     public User Sender { get; init; }
     public string Content { get; init; }
     public DateTimeOffset SentAt { get; init; } = DateTimeOffset.UtcNow;
+    public bool IsRead { get; init; }
 }

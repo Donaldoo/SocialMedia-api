@@ -22,6 +22,7 @@ public class GetChatHistoryQueryHandler : IRequestHandler<GetChatHistoryQuery, I
                 Content = c.Content,
                 SentAt = c.SentAt,
                 SenderId = c.SenderId,
+                IsRead = c.IsRead
             })
             .OrderBy(c => c.SentAt)
             .ToListAsync(cancellationToken);

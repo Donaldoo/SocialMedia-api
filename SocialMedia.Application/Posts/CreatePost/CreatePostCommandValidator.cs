@@ -9,7 +9,6 @@ public class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
     {
         RuleFor(f => f.Description)
             .Cascade(CascadeMode.Stop)
-            .NotEmpty().WithMessage(resource.FieldRequired(nameof(CreatePostCommand.Description)))
             .MaximumLength(400).WithMessage("Description cannot be longer than 400 characters.");
     }
 }

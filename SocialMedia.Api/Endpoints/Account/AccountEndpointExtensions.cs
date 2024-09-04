@@ -11,6 +11,7 @@ public static class AccountEndpointExtensions
         app.MapEditAccount();
         app.MapGetSuggestedUsers();
         app.MapGetUserFollowing();
+        app.MapSearchUsers();
         return app;
     }
 }

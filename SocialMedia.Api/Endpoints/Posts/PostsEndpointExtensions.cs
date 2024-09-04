@@ -16,6 +16,7 @@ public static class PostsEndpointExtensions
         app.MapUploadImage();
         app.MapCreateStory();
         app.MapGetStories();
+        app.MapGetPostById();
         return app;
     }
 }

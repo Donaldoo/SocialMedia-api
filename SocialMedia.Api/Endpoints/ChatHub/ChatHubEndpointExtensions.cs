@@ -8,7 +8,8 @@ public static class ChatHubEndpointExtensions
         app.MapCreateMessage();
         app.MapGetChatHistory();
         app.MapGetChatParticipants();
-
+        app.MapGetAllChats();
+        
         return app;
     }
     

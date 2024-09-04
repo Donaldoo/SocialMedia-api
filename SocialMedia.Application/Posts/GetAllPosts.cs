@@ -4,9 +4,11 @@ using SocialMedia.Domain.Posts;
 
 namespace SocialMedia.Application.Posts;
 
-public record GetAllPosts() : IRequest<IList<PostDto>>, IAuthenticatedRequest
+public record GetAllPosts : IRequest<IList<PostDto>>, IAuthenticatedRequest
 {
     public PostCategory? Category { get; init; }
+    public WorkExperience? WorkExperience { get; init; }
+    public WorkIndustry? WorkIndustry { get; init; }
     public Guid? UserId { get; init; }
 }
 

@@ -10,4 +10,5 @@ public record MessageDto
     public string Content { get; init; }
     public DateTimeOffset SentAt { get; init; }
     public Guid SenderId { get; init; }
+    public bool IsRead { get; init; }
 }
