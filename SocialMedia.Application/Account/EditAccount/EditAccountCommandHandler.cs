@@ -29,7 +29,7 @@ internal sealed class EditAccountCommandHandler : IRequestHandler<EditAccountCom
             Email = request.Email,
             Password = string.IsNullOrWhiteSpace(request.Password) ? u.Password : _passwordHasher.HashPassword(request.Password),
             City = request.City,
-            Website = request.Website,
+            Bio = request.Bio,
             ProfilePicture = request.ProfilePicture == u.ProfilePicture ? u.ProfilePicture : _settings.WebApiUrl + request.ProfilePicture,
             CoverPicture = request.CoverPicture == u.CoverPicture ? u.CoverPicture : _settings.WebApiUrl + request.CoverPicture,
         }, _currentUser.UserId);

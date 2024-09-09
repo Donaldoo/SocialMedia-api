@@ -28,7 +28,7 @@ internal class CreateAccountCommandHandler : IRequestHandler<CreateAccountComman
             Email = request.Email,
             Password = _passwordHasher.HashPassword(request.Password),
             City = request.City,
-            Website = request.Website
+            Bio = request.Bio
         };
         await _dataWriter.Add(account).SaveAsync(cancellationToken);
 

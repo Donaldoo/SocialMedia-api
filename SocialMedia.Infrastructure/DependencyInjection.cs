@@ -25,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<IGenericQuery, EfGenericQuery>();
         services.AddScoped<IDataSynchronizer, EfDataSynchronizer>();
         services.AddScoped<IDataMigrator, EfDataMigrator>();
+        services.AddScoped<IDataSeeder, EfDataSeeder>();
         services.AddHttpClient();
         return services;
     }

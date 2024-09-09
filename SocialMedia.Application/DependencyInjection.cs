@@ -2,6 +2,7 @@ using System.Reflection;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using SocialMedia.Application.Account;
+using SocialMedia.Application.ChatHub;
 using SocialMedia.Application.Common;
 using SocialMedia.Application.Common.Behaviours;
 using SocialMedia.Application.Common.Dates;
@@ -32,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IDateFormatter, DateFormatter>();
         services.AddScoped<IFileStorageService, FileStorageService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IChatService, ChatService>();
         services.AddSingleton(settings);
 
         return services;

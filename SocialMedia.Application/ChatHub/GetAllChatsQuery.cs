@@ -15,4 +15,5 @@ public record ChatDto
     public string ProfilePicture { get; init; }
     public string LastMessage { get; init; }
     public DateTimeOffset LastMessageSentAt { get; init; }
+    public bool IsOnline { get; init; }
 }

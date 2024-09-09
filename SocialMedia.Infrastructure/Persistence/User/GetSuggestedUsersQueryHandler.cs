@@ -21,13 +21,14 @@ internal sealed class GetSuggestedUsersQueryHandler : IRequestHandler<GetSuggest
         return await _db.Users
             .Where(u => u.Id != _currentUser.UserId && !_db.Relationships
                 .Any(r => r.FollowerUserId == _currentUser.UserId && r.FollowedUserId == u.Id))
-
+            .OrderBy(u => EF.Functions.Random())
             .Select(u => new UserDto
             {
                 Id = u.Id,
                 DisplayName = u.FirstName + " " + u.LastName,
                 ProfilePicture = u.ProfilePicture
             })
+            .Take(6)
             .ToListAsync(cancellationToken);
     }
 }

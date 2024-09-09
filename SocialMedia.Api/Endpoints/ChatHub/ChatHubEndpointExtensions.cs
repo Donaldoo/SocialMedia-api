@@ -9,6 +9,7 @@ public static class ChatHubEndpointExtensions
         app.MapGetChatHistory();
         app.MapGetChatParticipants();
         app.MapGetAllChats();
+        app.MapGetAllUnreadMessages();
         
         return app;
     }

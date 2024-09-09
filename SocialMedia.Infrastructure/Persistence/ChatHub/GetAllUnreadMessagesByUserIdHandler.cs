@@ -4,7 +4,7 @@ using SocialMedia.Application.ChatHub;
 
 namespace SocialMedia.Infrastructure.Persistence.ChatHub;
 
-internal sealed class GetAllUnreadMessagesByUserIdHandler : IRequestHandler<GetAllUnreadMessagesByUserIdQuery, IList<MessageDto>>
+internal sealed class GetAllUnreadMessagesByUserIdHandler : IRequestHandler<GetAllUnreadMessagesByUserIdQuery, IList<UnreadMessageDto>>
 {
     private readonly AppDbContext _db;
 
@@ -13,16 +13,22 @@ internal sealed class GetAllUnreadMessagesByUserIdHandler : IRequestHandler<GetA
         _db = db;
     }
 
-    public async Task<IList<MessageDto>> Handle(GetAllUnreadMessagesByUserIdQuery request, CancellationToken cancellationToken)
+    public async Task<IList<UnreadMessageDto>> Handle(GetAllUnreadMessagesByUserIdQuery request,
+        CancellationToken cancellationToken)
     {
         return await _db.Messages
-            .Where(m => !m.IsRead && _db.ChatUsers.Any(cu => cu.ChatId == m.ChatId && cu.UserId == request.UserId))
-            .Select(m => new MessageDto
+            .Where(m => !m.IsRead && m.SenderId != request.UserId && _db.ChatUsers.Any(cu => cu.ChatId == m.ChatId && cu.UserId == request.UserId))
+            .GroupBy(m => m.ChatId)
+            .Select(g => new UnreadMessageDto
             {
-                Id = m.Id,
-                SenderId = m.SenderId,
-                Content = m.Content,
-                SentAt = m.SentAt
+                Id = g.OrderByDescending(m => m.SentAt).First().Id,
+                SenderId = g.OrderByDescending(m => m.SentAt).First().SenderId,
+                Content = g.OrderByDescending(m => m.SentAt).First().Content,
+                SentAt = g.OrderByDescending(m => m.SentAt).First().SentAt,
+                SenderDisplayName = g.OrderByDescending(m => m.SentAt).First().Sender.FirstName + " " +
+                                    g.OrderByDescending(m => m.SentAt).First().Sender.LastName,
+                SenderProfilePicture = g.OrderByDescending(m => m.SentAt).First().Sender.ProfilePicture,
+                UnreadMessageCount = g.Count()
             })
             .OrderByDescending(m => m.SentAt)
             .ToListAsync(cancellationToken);

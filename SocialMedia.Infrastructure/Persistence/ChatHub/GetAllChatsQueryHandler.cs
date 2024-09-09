@@ -20,12 +20,17 @@ internal sealed class GetAllChatsQueryHandler : IRequestHandler<GetAllChatsQuery
     {
         return await _db.ChatUsers
             .Where(cu => cu.UserId == _currentUser.UserId)
+            .Where(cu => _db.Messages.Any(m => m.ChatId == cu.ChatId))
             .Select(cu => new ChatDto
             {
                 ChatId = cu.ChatId,
                 UserId = _db.ChatUsers
                     .Where(otherCu => otherCu.ChatId == cu.ChatId && otherCu.UserId != _currentUser.UserId)
                     .Select(otherCu => otherCu.UserId)
+                    .FirstOrDefault(),
+                IsOnline = _db.ChatUsers
+                    .Where(otherCu => otherCu.ChatId == cu.ChatId && otherCu.UserId != _currentUser.UserId)
+                    .Select(otherCu => otherCu.User.IsOnline)
                     .FirstOrDefault(),
                 UserName = _db.ChatUsers
                     .Where(otherCu => otherCu.ChatId == cu.ChatId && otherCu.UserId != _currentUser.UserId)

@@ -12,6 +12,7 @@ using SocialMedia.Api.Common.Extensions;
 using SocialMedia.Api.Common.MiddleWares;
 using SocialMedia.Api.Endpoints;
 using SocialMedia.Application;
+using SocialMedia.Application.ChatHub;
 using SocialMedia.Application.Common;
 using SocialMedia.Application.Common.Data;
 using SocialMedia.Application.NotificationHub;
@@ -143,6 +144,7 @@ JsonConvert.DefaultSettings = () => new JsonSerializerSettings
 using var scope = app.Services.CreateScope();
 
 scope.ServiceProvider.GetRequiredService<IDataMigrator>().Migrate();
+scope.ServiceProvider.GetRequiredService<IDataSeeder>().SeedAsync();
 
 if (app.Environment.IsDevelopment())
 {

@@ -28,6 +28,9 @@ namespace SocialMedia.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Bio")
+                        .HasColumnType("text");
+
                     b.Property<string>("City")
                         .HasColumnType("text");
 
@@ -42,6 +45,9 @@ namespace SocialMedia.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsOnline")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -51,9 +57,6 @@ namespace SocialMedia.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("ProfilePicture")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Website")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
